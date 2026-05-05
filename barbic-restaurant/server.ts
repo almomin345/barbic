@@ -134,7 +134,7 @@ setInterval(async () => {
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const FAST2SMS_API_KEY = "2uUWA49isSjTnfevxJ3BEP1Zr6hqFX8dlgwCLaVyb5YoODRH0zbyo2hOLNF3qI608i7TemgSZwWD1xRd";
 
 // In-memory OTP store (phone -> { otp, expiresAt })

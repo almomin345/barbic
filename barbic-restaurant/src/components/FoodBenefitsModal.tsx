@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Globe2, Activity, Zap, CheckCircle2 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { MenuItem } from '../data/menuData';
@@ -168,26 +169,30 @@ export const FoodBenefitsModal: React.FC<FoodBenefitsModalProps> = ({ isOpen, on
   const currentFallback = fallbackTranslations[language] || fallbackTranslations['English'];
   const uiText = currentFallback.ui;
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm sm:p-6">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[9999] overflow-y-auto bg-black/60 backdrop-blur-sm px-4 py-8 sm:p-6 flex items-start justify-center"
+      onClick={onClose}
+    >
       <div 
-        className="w-full max-w-lg bg-bg-main rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-lg bg-bg-main rounded-2xl shadow-2xl flex flex-col relative mt-auto mb-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="px-6 py-4 border-b border-orange-200/50 flex items-center justify-between bg-white shrink-0">
-          <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-2">
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 bg-white/80 dark:bg-black/50 text-gray-800 dark:text-white p-2 rounded-full shadow-md hover:bg-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="px-6 py-5 border-b border-orange-200/50 flex items-center justify-between dark:border-white/10 shrink-0">
+          <h3 className="text-xl font-display font-bold text-text-main flex items-center gap-2 pr-10">
             <Activity className="w-5 h-5 text-primary-500" />
             {uiText.title}
           </h3>
-          <button 
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
-          >
-            <X className="w-6 h-6" />
-          </button>
         </div>
 
-        <div className="p-6 overflow-y-auto hidden-scrollbar flex-1 bg-gradient-to-b from-white to-bg-main relative">
+        <div className="p-6">
           <div className="mb-6 flex items-center gap-3">
             <div className="w-16 h-16 rounded-xl overflow-hidden border border-orange-100 shadow-sm shrink-0">
               <OptimizedImage src={item.imageUrl || item.image || ''} alt={item.name} className="w-full h-full" />
@@ -292,4 +297,6 @@ export const FoodBenefitsModal: React.FC<FoodBenefitsModalProps> = ({ isOpen, on
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
